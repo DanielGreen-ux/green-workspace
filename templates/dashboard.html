@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Green Workspace{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <header class="dashboard-header">
+        <h1>Welcome, {{ session['username'] }}! 👋</h1>
+        <p>Organize your work, files, and notes in one place.</p>
+    </header>
+
+    <section class="task-card">
+        <h3>➕ Create New Folder Task</h3>
+        <form action="{{ url_for('add_task') }}" method="POST" enctype="multipart/form-data" class="task-form">
+            <input type="text" name="title" placeholder="Folder Name / Task Title..." required class="input-field">
+            <textarea name="notes" placeholder="Write context or notes here..." class="textarea-field" rows="3"></textarea>
+            <div class="form-bottom">
+                <input type="file" name="file" class="file-btn">
+                <button type="submit" class="btn primary-btn">Create Folder</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="task-card">
+        <h3>📁 Your Workspace Folders</h3>
+        {% if tasks %}
+            <div class="folder-grid">
+                {% for task in tasks %}
+                    <details class="folder-item {% if task.status == 'Completed' %}completed{% endif %}">
+                        <summary class="folder-header">
+                            <span class="folder-title">📁 {{ task.title }}</span>
+                            <span class="folder-badge">{{ task.status }}</span>
+                        </summary>
+                        
+                        <div class="folder-content">
+                            <!-- View Mode -->
+                            <div class="view-section">
+                                <h4>Notes:</h4>
+                                <p class="notes-text">{{ task.notes if task.notes else 'No notes added.' }}</p>
+
+                                {% if task.filename %}
+                                    <div class="attachment-box">
+                                        <strong>Attachment:</strong>
+                                        <a href="{{ url_for('static', filename='uploads/' + task.filename) }}" target="_blank" class="file-link">
+                                            📎 {{ task.filename }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                                <div class="action-bar">
+                                    <a href="{{ url_for('toggle_task', task_id=task.id) }}" class="btn action-btn">
+                                        {% if task.status == 'Completed' %}Mark Pending{% else %}Mark Complete{% endif %}
+                                    </a>
+                                    <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn delete-btn">Delete Folder</a>
+                                </div>
+                            </div>
+
+                            <hr class="divider">
+
+                            <!-- Edit Form -->
+                            <form action="{{ url_for('edit_task', task_id=task.id) }}" method="POST" enctype="multipart/form-data" class="edit-form">
+                                <h4>✏️ Edit Task / Notes</h4>
+                                <input type="text" name="title" value="{{ task.title }}" required class="input-field">
+                                <textarea name="notes" class="textarea-field" rows="3">{{ task.notes }}</textarea>
+                                <div class="form-bottom">
+                                    <input type="file" name="file" class="file-btn">
+                                    <button type="submit" class="btn save-btn">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </details>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No folders created yet. Add your first task above!</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
