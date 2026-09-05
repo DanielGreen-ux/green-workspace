@@ -168,3 +168,68 @@ body {
     border: 0;
     border-top: 1px solid #eee;
 }
+/* Centered Auth Card Layout */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: 1rem;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+}
+
+.auth-card h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--primary-dark);
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.auth-card .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.auth-card label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.auth-card .btn {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #555;
+}
+
+.auth-footer a {
+    color: var(--primary-dark);
+    font-weight: bold;
+    text-decoration: none;
+}
