@@ -233,3 +233,14 @@ body {
     font-weight: bold;
     text-decoration: none;
 }
+.remove-file-btn {
+    margin-left: 0.75rem;
+    font-size: 0.85rem;
+    color: #c62828;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.remove-file-btn:hover {
+    text-decoration: underline;
+}

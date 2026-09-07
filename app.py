@@ -146,6 +146,24 @@ def delete_task(task_id):
         
     return redirect(url_for('dashboard'))
 
+@app.route('/delete_file/<int:task_id>')
+def delete_file(task_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    task = Task.query.get_or_404(task_id)
+    if task.user_id == session['user_id'] and task.filename:
+        # Delete the actual file from static/uploads folder
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], task.filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            
+        # Clear filename from the database record
+        task.filename = None
+        db.session.commit()
+        
+    return redirect(url_for('dashboard'))
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

@@ -44,6 +44,7 @@
                                         <a href="{{ url_for('static', filename='uploads/' + task.filename) }}" target="_blank" class="file-link">
                                             📎 {{ task.filename }}
                                         </a>
+                                        <a href="{{ url_for('delete_file', task_id=task.id) }}" class="remove-file-btn">🗑️ Remove File</a>
                                     </div>
                                 {% endif %}
 
