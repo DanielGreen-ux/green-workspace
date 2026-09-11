@@ -33,29 +33,24 @@
                         </summary>
                         
                         <div class="folder-content">
-                            <!-- View Mode -->
-                            <div class="view-section">
-                                <h4>Notes:</h4>
-                                <p class="notes-text">{{ task.notes if task.notes else 'No notes added.' }}</p>
+                           <div class="view-section">
+    <h4>Notes:</h4>
+    <p class="notes-text">{{ task.notes if task.notes else 'No notes added.' }}</p>
 
-                                {% if task.filename %}
-                                    <div class="attachment-box">
-                                        <strong>Attachment:</strong>
-                                        <a href="{{ url_for('static', filename='uploads/' + task.filename) }}" target="_blank" class="file-link">
-                                            📎 {{ task.filename }}
-                                        </a>
-                                        <a href="{{ url_for('delete_file', task_id=task.id) }}" class="remove-file-btn">🗑️ Remove File</a>
-                                    </div>
-                                {% endif %}
+    {% if task.filename %}
+        <a href="{{ task.filename }}" target="_blank" class="file-link">
+            📎 View file
+        </a>
+        <a href="{{ url_for('delete_file', task_id=task.id) }}" class="remove-file-btn">🗑️ Remove File</a>
+    {% endif %}
+</div>
 
-                                <div class="action-bar">
-                                    <a href="{{ url_for('toggle_task', task_id=task.id) }}" class="btn action-btn">
-                                        {% if task.status == 'Completed' %}Mark Pending{% else %}Mark Complete{% endif %}
-                                    </a>
-                                    <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn delete-btn">Delete Folder</a>
-                                </div>
-                            </div>
-
+<div class="action-bar">
+    <a href="{{ url_for('toggle_task', task_id=task.id) }}" class="btn action-btn">
+        {% if task.status == 'Completed' %}Mark Pending{% else %}Mark Complete{% endif %}
+    </a>
+    <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn delete-btn">Delete Folder</a>
+</div>
                             <hr class="divider">
 
                             <!-- Edit Form -->
