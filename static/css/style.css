@@ -1,25 +1,25 @@
 :root {
     --primary: #2e7d32;
     --primary-dark: #1b5e20;
+    --navbar-bg: #163F36;
     --accent: #4caf50;
     --bg-dark: rgba(18, 30, 21, 0.85);
     --card-bg: rgba(255, 255, 255, 0.95);
     --text-dark: #1c281e;
     --border: #c8e6c9;
 }
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background: linear-gradient(var(--bg-dark), var(--bg-dark)), 
-                url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    background: 
+        linear-gradient(rgba(10, 30, 12, 0.78), rgba(10, 30, 12, 0.78)),
+        url('https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
     color: var(--text-dark);
 }
-
 .navbar {
-    background-color: var(--primary-dark);
+    background-color: var(--navbar-bg);
     padding: 1rem 3rem;
     display: flex;
     justify-content: space-between;
@@ -190,7 +190,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     width: 100%;
-    max-width: 420px;
+    max-width: 520px;
     box-sizing: border-box;
 }
 
