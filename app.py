@@ -7,7 +7,8 @@ from werkzeug.utils import secure_filename
 import cloudinary
 import cloudinary.uploader
 from fpdf import FPDF
-from datetime import datetime
+from datetime import datetime, date
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 load_dotenv()
@@ -132,7 +133,9 @@ def tasks_to_pdf(tasks):
         pdf.set_draw_color(200, 200, 200)
         pdf.line(10, pdf.get_y(), 200, pdf.get_y())
     return bytes(pdf.output())
+
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -146,7 +149,12 @@ class Task(db.Model):
     notes = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(20), default='Pending')
     filename = db.Column(db.String(200), nullable=True)
+    due_date = db.Column(db.Date, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    @property
+    def is_overdue(self):
+        return self.due_date is not None and self.due_date < date.today() and self.status != 'Completed'
 
 @app.route('/')
 def index():
@@ -198,7 +206,6 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/dashboard')
-@app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -217,12 +224,15 @@ def dashboard():
     return render_template('dashboard.html', tasks=user_tasks, search=search, status_filter=status_filter)
 
 @app.route('/add_task', methods=['POST'])
+@app.route('/add_task', methods=['POST'])
 def add_task():
     if 'user_id' not in session:
         return redirect(url_for('login'))
         
     title = request.form.get('title')
     notes = request.form.get('notes')
+    due_date_str = request.form.get('due_date')
+    due_date = datetime.strptime(due_date_str, '%Y-%m-%d').date() if due_date_str else None
     file = request.files.get('file')
     filename = None
     
@@ -232,12 +242,13 @@ def add_task():
             return redirect(url_for('dashboard'))
         result = cloudinary.uploader.upload(file)
         filename = result['secure_url']
-    new_task = Task(title=title, notes=notes, filename=filename, user_id=session['user_id'])
+    new_task = Task(title=title, notes=notes, filename=filename, due_date=due_date, user_id=session['user_id'])
     db.session.add(new_task)
     db.session.commit()
     flash('Task created successfully!', 'success')
     return redirect(url_for('dashboard'))
 
+@app.route('/edit_task/<int:task_id>', methods=['POST'])
 @app.route('/edit_task/<int:task_id>', methods=['POST'])
 def edit_task(task_id):
     if 'user_id' not in session:
@@ -247,6 +258,8 @@ def edit_task(task_id):
     if task.user_id == session['user_id']:
         task.title = request.form.get('title')
         task.notes = request.form.get('notes')
+        due_date_str = request.form.get('due_date')
+        task.due_date = datetime.strptime(due_date_str, '%Y-%m-%d').date() if due_date_str else None
         
         file = request.files.get('file')
         if file and file.filename != '':
@@ -338,6 +351,4 @@ def export_all(fmt):
         return redirect(url_for('dashboard'))
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)

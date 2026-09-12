@@ -359,3 +359,20 @@ button:disabled {
     border-radius: 6px;
     font-size: 1rem;
 }
+.due-date {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0.5rem 0;
+}
+.due-date.overdue {
+    color: #c62828;
+    font-weight: 600;
+}
+.overdue-tag {
+    background: #ffebee;
+    color: #c62828;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}

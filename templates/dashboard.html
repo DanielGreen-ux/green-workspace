@@ -11,14 +11,15 @@
 
     <section class="task-card">
         <h3>➕ Create New Folder Task</h3>
-        <form action="{{ url_for('add_task') }}" method="POST" enctype="multipart/form-data" class="task-form">
-            <input type="text" name="title" placeholder="Folder Name / Task Title..." required class="input-field">
-            <textarea name="notes" placeholder="Write context or notes here..." class="textarea-field" rows="3"></textarea>
-            <div class="form-bottom">
-                <input type="file" name="file" class="file-btn">
-                <button type="submit" class="btn primary-btn">Create Folder</button>
-            </div>
-        </form>
+       <form action="{{ url_for('add_task') }}" method="POST" enctype="multipart/form-data" class="task-form">
+    <input type="text" name="title" placeholder="Folder Name / Task Title..." required class="input-field">
+    <textarea name="notes" placeholder="Write context or notes here..." class="textarea-field" rows="3"></textarea>
+    <input type="date" name="due_date" class="input-field">
+    <div class="form-bottom">
+        <input type="file" name="file" class="file-btn">
+        <button type="submit" class="btn primary-btn">Create Folder</button>
+    </div>
+</form>
     </section>
 
     <section class="task-card">
@@ -57,6 +58,13 @@
     <h4>Notes:</h4>
     <p class="notes-text">{{ task.notes if task.notes else 'No notes added.' }}</p>
 
+    {% if task.due_date %}
+        <p class="due-date {% if task.is_overdue %}overdue{% endif %}">
+            📅 Due: {{ task.due_date.strftime('%B %d, %Y') }}
+            {% if task.is_overdue %}<span class="overdue-tag">Overdue</span>{% endif %}
+        </p>
+    {% endif %}
+
     {% if task.filename %}
         <a href="{{ task.filename }}" target="_blank" class="file-link">
             📎 View file
@@ -77,14 +85,15 @@
 
                             <!-- Edit Form -->
                             <form action="{{ url_for('edit_task', task_id=task.id) }}" method="POST" enctype="multipart/form-data" class="edit-form">
-                                <h4>✏️ Edit Task / Notes</h4>
-                                <input type="text" name="title" value="{{ task.title }}" required class="input-field">
-                                <textarea name="notes" class="textarea-field" rows="3">{{ task.notes }}</textarea>
-                                <div class="form-bottom">
-                                    <input type="file" name="file" class="file-btn">
-                                    <button type="submit" class="btn save-btn">Save Changes</button>
-                                </div>
-                            </form>
+    <h4>✏️ Edit Task / Notes</h4>
+    <input type="text" name="title" value="{{ task.title }}" required class="input-field">
+    <textarea name="notes" class="textarea-field" rows="3">{{ task.notes }}</textarea>
+    <input type="date" name="due_date" value="{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '' }}" class="input-field">
+    <div class="form-bottom">
+        <input type="file" name="file" class="file-btn">
+        <button type="submit" class="btn save-btn">Save Changes</button>
+    </div>
+</form>
                         </div>
                     </details>
                 {% endfor %}
@@ -101,4 +110,6 @@
         {% endif %}
     </div>
 {% endif %}
+    </section>
+</div>
 {% endblock %}
