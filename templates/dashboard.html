@@ -22,7 +22,15 @@
     </section>
 
     <section class="task-card">
-        <h3>📁 Your Workspace Folders</h3>
+        <div class="folder-section-header">
+            <h3>📁 Your Workspace Folders</h3>
+            {% if tasks %}
+                <div class="export-all-bar">
+                    <a href="{{ url_for('export_all', fmt='pdf') }}" class="btn action-btn">📄 Export All (PDF)</a>
+                    <a href="{{ url_for('export_all', fmt='md') }}" class="btn action-btn">📝 Export All (Markdown)</a>
+                </div>
+            {% endif %}
+        </div>
         {% if tasks %}
             <div class="folder-grid">
                 {% for task in tasks %}
@@ -50,6 +58,8 @@
         {% if task.status == 'Completed' %}Mark Pending{% else %}Mark Complete{% endif %}
     </a>
     <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn delete-btn">Delete Folder</a>
+    <a href="{{ url_for('export_task', task_id=task.id, fmt='pdf') }}" class="btn action-btn">📄 PDF</a>
+    <a href="{{ url_for('export_task', task_id=task.id, fmt='md') }}" class="btn action-btn">📝 MD</a>
 </div>
                             <hr class="divider">
 

@@ -5,3 +5,4 @@ gunicorn
 python-dotenv
 psycopg2-binary
 cloudinary
+fpdf2

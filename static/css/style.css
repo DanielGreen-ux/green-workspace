@@ -276,3 +276,15 @@ button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
+.folder-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.export-all-bar {
+    display: flex;
+    gap: 0.5rem;
+}
