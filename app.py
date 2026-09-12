@@ -26,6 +26,10 @@ cloudinary.config(
     api_key=os.environ["CLOUDINARY_API_KEY"],
     api_secret=os.environ["CLOUDINARY_API_SECRET"],
 )
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx', 'txt', 'xlsx', 'csv'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 db = SQLAlchemy(app)
 class User(db.Model):
@@ -110,6 +114,9 @@ def add_task():
     filename = None
     
     if file and file.filename != '':
+        if not allowed_file(file.filename):
+            flash('File type not allowed. Please upload an image, PDF, or document.', 'error')
+            return redirect(url_for('dashboard'))
         result = cloudinary.uploader.upload(file)
         filename = result['secure_url']
     new_task = Task(title=title, notes=notes, filename=filename, user_id=session['user_id'])
@@ -118,6 +125,7 @@ def add_task():
     flash('Task created successfully!', 'success')
     return redirect(url_for('dashboard'))
 
+@app.route('/edit_task/<int:task_id>', methods=['POST'])
 @app.route('/edit_task/<int:task_id>', methods=['POST'])
 def edit_task(task_id):
     if 'user_id' not in session:
@@ -130,6 +138,9 @@ def edit_task(task_id):
         
         file = request.files.get('file')
         if file and file.filename != '':
+            if not allowed_file(file.filename):
+                flash('File type not allowed. Please upload an image, PDF, or document.', 'error')
+                return redirect(url_for('dashboard'))
             result = cloudinary.uploader.upload(file)
             task.filename = result['secure_url']
         db.session.commit()
