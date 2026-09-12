@@ -127,6 +127,13 @@ body {
     font-size: 0.8rem;
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
+    font-weight: 600;
+}
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+.badge-completed {
     background: #e8f5e9;
     color: var(--primary-dark);
 }
@@ -287,4 +294,23 @@ button:disabled {
 .export-all-bar {
     display: flex;
     gap: 0.5rem;
+}
+.empty-state-box {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7c6d;
+}
+.empty-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+.empty-state-box h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+}
+.empty-state-box p {
+    margin: 0;
+    font-size: 0.95rem;
 }

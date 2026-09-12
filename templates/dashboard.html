@@ -37,7 +37,7 @@
                     <details class="folder-item {% if task.status == 'Completed' %}completed{% endif %}">
                         <summary class="folder-header">
                             <span class="folder-title">📁 {{ task.title }}</span>
-                            <span class="folder-badge">{{ task.status }}</span>
+                            <span class="folder-badge badge-{{ task.status|lower }}">{{ task.status }}</span>
                         </summary>
                         
                         <div class="folder-content">
@@ -78,7 +78,11 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="empty-state">No folders created yet. Add your first task above!</p>
+            <div class="empty-state-box">
+                <span class="empty-icon">🌱</span>
+                <h4>No folders yet</h4>
+                <p>Create your first folder above to start organizing your work.</p>
+            </div>
         {% endif %}
     </section>
 </div>
