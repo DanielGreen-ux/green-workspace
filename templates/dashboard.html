@@ -23,6 +23,18 @@
 
     <section class="task-card">
         <div class="folder-section-header">
+            <form method="GET" action="{{ url_for('dashboard') }}" class="search-filter-bar">
+    <input type="text" name="search" placeholder="Search folders..." value="{{ search }}" class="input-field search-input">
+    <select name="status" class="status-select" onchange="this.form.submit()">
+        <option value="" {% if not status_filter %}selected{% endif %}>All Statuses</option>
+        <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+        <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+    </select>
+    <button type="submit" class="btn action-btn">Search</button>
+    {% if search or status_filter %}
+        <a href="{{ url_for('dashboard') }}" class="btn delete-btn">Clear</a>
+    {% endif %}
+</form>
             <h3>📁 Your Workspace Folders</h3>
             {% if tasks %}
                 <div class="export-all-bar">
@@ -77,13 +89,16 @@
                     </details>
                 {% endfor %}
             </div>
+       {% else %}
+    <div class="empty-state-box">
+        <span class="empty-icon">🌱</span>
+        {% if search or status_filter %}
+            <h4>No matching folders</h4>
+            <p>Try a different search term or clear the filter.</p>
         {% else %}
-            <div class="empty-state-box">
-                <span class="empty-icon">🌱</span>
-                <h4>No folders yet</h4>
-                <p>Create your first folder above to start organizing your work.</p>
-            </div>
+            <h4>No folders yet</h4>
+            <p>Create your first folder above to start organizing your work.</p>
         {% endif %}
-    </section>
-</div>
+    </div>
+{% endif %}
 {% endblock %}

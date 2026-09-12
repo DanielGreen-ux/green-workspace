@@ -198,12 +198,23 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/dashboard')
+@app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-        
-    user_tasks = Task.query.filter_by(user_id=session['user_id']).all()
-    return render_template('dashboard.html', tasks=user_tasks)
+    
+    search = request.args.get('search', '').strip()
+    status_filter = request.args.get('status', '')
+    
+    query = Task.query.filter_by(user_id=session['user_id'])
+    
+    if search:
+        query = query.filter(Task.title.ilike(f'%{search}%'))
+    if status_filter in ('Pending', 'Completed'):
+        query = query.filter_by(status=status_filter)
+    
+    user_tasks = query.all()
+    return render_template('dashboard.html', tasks=user_tasks, search=search, status_filter=status_filter)
 
 @app.route('/add_task', methods=['POST'])
 def add_task():

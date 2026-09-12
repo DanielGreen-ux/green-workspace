@@ -342,3 +342,20 @@ button:disabled {
         width: 95%;
     }
 }
+.search-filter-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.search-input {
+    flex: 1;
+    min-width: 180px;
+}
+.status-select {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1rem;
+}
