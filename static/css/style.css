@@ -314,3 +314,31 @@ button:disabled {
     margin: 0;
     font-size: 0.95rem;
 }
+@media (max-width: 600px) {
+    .navbar {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .nav-brand {
+        font-size: 1.1rem;
+    }
+    .nav-logo {
+        height: 32px;
+        width: 32px;
+    }
+    .nav-links a {
+        margin-left: 1rem;
+        font-size: 0.9rem;
+    }
+    body {
+        background-attachment: scroll;
+    }
+    .auth-container {
+        min-height: auto;
+        padding: 2rem 1rem;
+    }
+    .container {
+        width: 95%;
+    }
+}
