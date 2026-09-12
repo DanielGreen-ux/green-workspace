@@ -55,7 +55,7 @@ def register():
         password = request.form.get('password')
         
         if User.query.filter_by(username=username).first():
-            flash('Username already exists.')
+            flash('Username already exists.', 'error')
             return redirect(url_for('register'))
             
         hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
@@ -63,7 +63,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         
-        flash('Account created successfully! Please log in.')
+        flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('login'))
         
     return render_template('register.html')
@@ -78,9 +78,10 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             session['user_id'] = user.id
             session['username'] = user.username
+            flash(f'Welcome back, {user.username}!', 'success')
             return redirect(url_for('dashboard'))
             
-        flash('Invalid username or password.')
+        flash('Invalid username or password.', 'error')
         return redirect(url_for('login'))
         
     return render_template('login.html')
@@ -128,10 +129,11 @@ def edit_task(task_id):
         task.notes = request.form.get('notes')
         
         file = request.files.get('file')
-    if file and file.filename != '':
-        result = cloudinary.uploader.upload(file)
-        task.filename = result['secure_url']
+        if file and file.filename != '':
+            result = cloudinary.uploader.upload(file)
+            task.filename = result['secure_url']
         db.session.commit()
+        flash('Task updated successfully!', 'success')
     return redirect(url_for('dashboard'))
 
 @app.route('/toggle/<int:task_id>')
@@ -143,6 +145,7 @@ def toggle_task(task_id):
     if task.user_id == session['user_id']:
         task.status = 'Completed' if task.status == 'Pending' else 'Pending'
         db.session.commit()
+        flash(f'Task marked as {task.status}!', 'success')
         
     return redirect(url_for('dashboard'))
 
@@ -155,6 +158,7 @@ def delete_task(task_id):
     if task.user_id == session['user_id']:
         db.session.delete(task)
         db.session.commit()
+        flash('Task deleted.', 'success')
         
     return redirect(url_for('dashboard'))
 
@@ -165,9 +169,10 @@ def delete_file(task_id):
         
     task = Task.query.get_or_404(task_id)
     if task.user_id == session['user_id'] and task.filename:
-    # Clear filename from the database record
+        # Clear filename from the database record
         task.filename = None
         db.session.commit()
+        flash('File removed.', 'success')
     return redirect(url_for('dashboard'))
 
 if __name__ == "__main__":
