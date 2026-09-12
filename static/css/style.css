@@ -244,3 +244,31 @@ body {
 .remove-file-btn:hover {
     text-decoration: underline;
 }
+.flash-messages {
+    margin-bottom: 1rem;
+}
+.flash {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.nav-logo {
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+    border-radius: 50%;
+}

@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}?v=2">
+<link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}?v=2">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Green Workspace{% endblock %}</title>
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <nav class="navbar">
-        <a class="nav-brand" href="{{ url_for('dashboard') }}">🌿 Green Workspace</a>
+        <a class="nav-brand" href="{{ url_for('dashboard') }}">
+            <img src="{{ url_for('static', filename='logo-icon-circle.png') }}" alt="Green Workspace" class="nav-logo">
+            Green Workspace
+        </a>
         <div class="nav-links">
             {% if session.get('user_id') %}
                 <a href="{{ url_for('logout') }}">Logout</a>
@@ -20,7 +28,27 @@
     </nav>
 
     <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         {% block content %}{% endblock %}
     </main>
+    <script>
+    setTimeout(function() {
+        const flashes = document.querySelectorAll('.flash');
+        flashes.forEach(function(flash) {
+            flash.style.transition = 'opacity 0.5s ease';
+            flash.style.opacity = '0';
+            setTimeout(() => flash.remove(), 500);
+        });
+    }, 3000);
+</script>
 </body>
 </html>

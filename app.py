@@ -1,9 +1,11 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
 load_dotenv()
@@ -18,6 +20,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = 'green-workspace-secret-key'
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+cloudinary.config(
+    cloud_name=os.environ["CLOUDINARY_CLOUD_NAME"],
+    api_key=os.environ["CLOUDINARY_API_KEY"],
+    api_secret=os.environ["CLOUDINARY_API_SECRET"],
+)
 
 db = SQLAlchemy(app)
 class User(db.Model):
@@ -101,13 +109,12 @@ def add_task():
     filename = None
     
     if file and file.filename != '':
-        filename = secure_filename(file.filename)
-        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        
+        result = cloudinary.uploader.upload(file)
+        filename = result['secure_url']
     new_task = Task(title=title, notes=notes, filename=filename, user_id=session['user_id'])
     db.session.add(new_task)
     db.session.commit()
+    flash('Task created successfully!', 'success')
     return redirect(url_for('dashboard'))
 
 @app.route('/edit_task/<int:task_id>', methods=['POST'])
@@ -121,12 +128,9 @@ def edit_task(task_id):
         task.notes = request.form.get('notes')
         
         file = request.files.get('file')
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            task.filename = filename
-            
+    if file and file.filename != '':
+        result = cloudinary.uploader.upload(file)
+        task.filename = result['secure_url']
         db.session.commit()
     return redirect(url_for('dashboard'))
 
@@ -161,15 +165,9 @@ def delete_file(task_id):
         
     task = Task.query.get_or_404(task_id)
     if task.user_id == session['user_id'] and task.filename:
-        # Delete the actual file from static/uploads folder
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], task.filename)
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            
-        # Clear filename from the database record
+    # Clear filename from the database record
         task.filename = None
         db.session.commit()
-        
     return redirect(url_for('dashboard'))
 
 if __name__ == "__main__":
