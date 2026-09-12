@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Green Workspace{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <header class="dashboard-header">
+        <h1>👤 Your Profile</h1>
+        <p>Manage your account settings.</p>
+    </header>
+
+    <section class="task-card">
+        <h3>Account Info</h3>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Total Folders:</strong> {{ task_count }}</p>
+        <p><strong>Completed:</strong> {{ completed_count }}</p>
+    </section>
+
+    <section class="task-card">
+        <h3>🔒 Change Password</h3>
+        <form method="POST" action="{{ url_for('profile') }}" class="task-form">
+            <input type="password" name="current_password" placeholder="Current password" required class="input-field">
+            <input type="password" name="new_password" placeholder="New password" required class="input-field">
+            <input type="password" name="confirm_password" placeholder="Confirm new password" required class="input-field">
+            <div class="form-bottom">
+                <button type="submit" class="btn primary-btn">Update Password</button>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

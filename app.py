@@ -204,6 +204,39 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get_or_404(session['user_id'])
+    
+    if request.method == 'POST':
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if not check_password_hash(user.password_hash, current_password):
+            flash('Current password is incorrect.', 'error')
+            return redirect(url_for('profile'))
+        
+        if new_password != confirm_password:
+            flash('New passwords do not match.', 'error')
+            return redirect(url_for('profile'))
+        
+        if len(new_password) < 6:
+            flash('New password must be at least 6 characters.', 'error')
+            return redirect(url_for('profile'))
+        
+        user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
+        db.session.commit()
+        flash('Password updated successfully!', 'success')
+        return redirect(url_for('profile'))
+    
+    task_count = Task.query.filter_by(user_id=user.id).count()
+    completed_count = Task.query.filter_by(user_id=user.id, status='Completed').count()
+    
+    return render_template('profile.html', user=user, task_count=task_count, completed_count=completed_count)
 
 @app.route('/dashboard')
 def dashboard():
