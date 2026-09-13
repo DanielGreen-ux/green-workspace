@@ -153,6 +153,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
+    security_question = db.Column(db.String(200), nullable=True)
+    security_answer_hash = db.Column(db.String(200), nullable=True)
     tasks = db.relationship('Task', backref='owner', lazy=True)
 
 class Task(db.Model):
@@ -180,13 +182,21 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        security_question = request.form.get('security_question')
+        security_answer = request.form.get('security_answer')
         
         if User.query.filter_by(username=username).first():
             flash('Username already exists.', 'error')
             return redirect(url_for('register'))
             
         hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password_hash=hashed_pw)
+        hashed_answer = generate_password_hash(security_answer.strip().lower(), method='pbkdf2:sha256')
+        new_user = User(
+            username=username,
+            password_hash=hashed_pw,
+            security_question=security_question,
+            security_answer_hash=hashed_answer
+        )
         db.session.add(new_user)
         db.session.commit()
         
@@ -213,6 +223,73 @@ def login():
         return redirect(url_for('login'))
         
     return render_template('login.html')
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
+def forgot_password():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        user = User.query.filter_by(username=username).first()
+        
+        if not user or not user.security_question:
+            flash('No account found with a security question set up for that username.', 'error')
+            return redirect(url_for('forgot_password'))
+        
+        session['reset_user_id'] = user.id
+        return redirect(url_for('verify_security_answer'))
+    
+    return render_template('forgot_password.html')
+
+
+@app.route('/verify_security_answer', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
+def verify_security_answer():
+    if 'reset_user_id' not in session:
+        return redirect(url_for('forgot_password'))
+    
+    user = User.query.get_or_404(session['reset_user_id'])
+    
+    if request.method == 'POST':
+        answer = request.form.get('security_answer', '').strip().lower()
+        
+        if not check_password_hash(user.security_answer_hash, answer):
+            flash('Incorrect answer. Please try again.', 'error')
+            return redirect(url_for('verify_security_answer'))
+        
+        session['reset_verified'] = True
+        return redirect(url_for('reset_password'))
+    
+    return render_template('verify_security_answer.html', question=user.security_question)
+
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if 'reset_user_id' not in session or not session.get('reset_verified'):
+        return redirect(url_for('forgot_password'))
+    
+    if request.method == 'POST':
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if new_password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return redirect(url_for('reset_password'))
+        
+        if len(new_password) < 6:
+            flash('Password must be at least 6 characters.', 'error')
+            return redirect(url_for('reset_password'))
+        
+        user = User.query.get_or_404(session['reset_user_id'])
+        user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
+        db.session.commit()
+        
+        session.pop('reset_user_id', None)
+        session.pop('reset_verified', None)
+        
+        flash('Password reset successfully! Please log in.', 'success')
+        return redirect(url_for('login'))
+    
+    return render_template('reset_password.html')
 
 @app.route('/logout')
 def logout():

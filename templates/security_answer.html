@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Identity - Green Workspace{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Verify Identity</h2>
+        <p style="text-align:center; color:#555; margin-bottom:1.5rem;"><strong>{{ question }}</strong></p>
+
+        <form method="POST" action="{{ url_for('verify_security_answer') }}">
+            <div class="form-group">
+                <label for="security_answer">Your Answer</label>
+                <input type="text" id="security_answer" name="security_answer" required autocomplete="off">
+            </div>
+            <button type="submit" class="btn primary-btn">Verify</button>
+        </form>
+        <p class="auth-footer"><a href="{{ url_for('login') }}">Back to Login</a></p>
+    </div>
+</div>
+{% endblock %}
