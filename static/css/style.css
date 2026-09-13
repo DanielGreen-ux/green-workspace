@@ -7,6 +7,22 @@
     --card-bg: rgba(255, 255, 255, 0.95);
     --text-dark: #1c281e;
     --border: #c8e6c9;
+
+    --fs-xs: 0.8rem;
+    --fs-sm: 0.9rem;
+    --fs-base: 1rem;
+    --fs-md: 1.1rem;
+    --fs-lg: 1.3rem;
+    --fs-xl: 1.6rem;
+    --fs-2xl: 2rem;
+
+    --fw-normal: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+
+    --lh-tight: 1.2;
+    --lh-normal: 1.5;
 }
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -17,7 +33,37 @@ body {
         linear-gradient(rgba(10, 30, 12, 0.78), rgba(10, 30, 12, 0.78)),
         url('https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
     color: var(--text-dark);
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
 }
+
+h1 {
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+}
+
+h2 {
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+}
+
+h3 {
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+}
+
+h4 {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+}
+
+p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+}
+
 .navbar {
     background-color: var(--navbar-bg);
     padding: 1rem 3rem;
@@ -29,8 +75,8 @@ body {
 
 .nav-brand {
     color: #ffffff;
-    font-size: 1.4rem;
-    font-weight: bold;
+    font-size: var(--fs-md);
+    font-weight: var(--fw-bold);
     text-decoration: none;
 }
 
@@ -38,7 +84,8 @@ body {
     color: #ffffff;
     text-decoration: none;
     margin-left: 1.5rem;
-    font-weight: 500;
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-base);
 }
 
 .container {
@@ -72,7 +119,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 6px;
     box-sizing: border-box;
-    font-size: 1rem;
+    font-size: var(--fs-base);
 }
 
 .form-bottom {
@@ -85,7 +132,8 @@ body {
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-base);
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
@@ -115,7 +163,8 @@ body {
 
 .folder-header {
     padding: 1rem;
-    font-weight: bold;
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-md);
     cursor: pointer;
     background: #f4fbf5;
     display: flex;
@@ -124,10 +173,10 @@ body {
 }
 
 .folder-badge {
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
 }
 .badge-pending {
     background: #fff3cd;
@@ -148,6 +197,7 @@ body {
     padding: 0.75rem;
     border-radius: 6px;
     border-left: 4px solid var(--primary);
+    font-size: var(--fs-base);
 }
 
 .attachment-box {
@@ -199,7 +249,6 @@ body {
     margin-bottom: 1.5rem;
     color: var(--primary-dark);
     text-align: center;
-    font-size: 1.8rem;
 }
 
 .auth-card .form-group {
@@ -209,7 +258,8 @@ body {
 .auth-card label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-sm);
     color: var(--text-dark);
 }
 
@@ -218,14 +268,14 @@ body {
     padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: var(--fs-base);
     box-sizing: border-box;
 }
 
 .auth-card .btn {
     width: 100%;
     padding: 0.8rem;
-    font-size: 1rem;
+    font-size: var(--fs-base);
     margin-top: 0.5rem;
 }
 
@@ -233,19 +283,20 @@ body {
     text-align: center;
     margin-top: 1.5rem;
     color: #555;
+    font-size: var(--fs-sm);
 }
 
 .auth-footer a {
     color: var(--primary-dark);
-    font-weight: bold;
+    font-weight: var(--fw-bold);
     text-decoration: none;
 }
 .remove-file-btn {
     margin-left: 0.75rem;
-    font-size: 0.85rem;
+    font-size: var(--fs-xs);
     color: #c62828;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: var(--fw-medium);
 }
 
 .remove-file-btn:hover {
@@ -258,7 +309,8 @@ body {
     padding: 0.75rem 1rem;
     border-radius: 6px;
     margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-base);
 }
 .flash-success {
     background-color: #d4edda;
@@ -301,18 +353,17 @@ button:disabled {
     color: #6b7c6d;
 }
 .empty-icon {
-    font-size: 2.5rem;
+    font-size: var(--fs-2xl);
     display: block;
     margin-bottom: 0.75rem;
 }
 .empty-state-box h4 {
     margin: 0 0 0.5rem 0;
     color: var(--primary-dark);
-    font-size: 1.2rem;
 }
 .empty-state-box p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
 }
 @media (max-width: 600px) {
     .navbar {
@@ -321,7 +372,7 @@ button:disabled {
         gap: 0.5rem;
     }
     .nav-brand {
-        font-size: 1.1rem;
+        font-size: var(--fs-base);
     }
     .nav-logo {
         height: 32px;
@@ -329,7 +380,7 @@ button:disabled {
     }
     .nav-links a {
         margin-left: 1rem;
-        font-size: 0.9rem;
+        font-size: var(--fs-sm);
     }
     body {
         background-attachment: scroll;
@@ -357,22 +408,22 @@ button:disabled {
     padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: var(--fs-base);
 }
 .due-date {
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     color: #555;
     margin: 0.5rem 0;
 }
 .due-date.overdue {
     color: #c62828;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
 }
 .overdue-tag {
     background: #ffebee;
     color: #c62828;
     padding: 0.15rem 0.5rem;
     border-radius: 10px;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     margin-left: 0.5rem;
 }
