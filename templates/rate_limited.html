@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Too Many Attempts - Green Workspace{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <section class="task-card" style="text-align: center;">
+        <h2>⏳ Too Many Attempts</h2>
+        <p>You've made too many requests. Please wait a minute and try again.</p>
+        <a href="{{ url_for('login') }}" class="btn primary-btn">Back to Login</a>
+    </section>
+</div>
+{% endblock %}

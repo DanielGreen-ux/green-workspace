@@ -9,6 +9,8 @@ import cloudinary.uploader
 from fpdf import FPDF
 from datetime import datetime, date
 from flask_migrate import Migrate
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 load_dotenv()
@@ -55,6 +57,10 @@ def tasks_to_markdown(tasks):
         sections.append(task_to_markdown(task))
         sections.append("\n---\n")
     return "\n".join(sections)
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return render_template('rate_limited.html'), 429
 
 def task_to_pdf(task):
     pdf = FPDF()
@@ -136,6 +142,12 @@ def tasks_to_pdf(tasks):
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)   
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -163,6 +175,7 @@ def index():
     return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -183,6 +196,7 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
