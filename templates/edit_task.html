@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Edit {{ task.title }} - Green Workspace{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <header class="dashboard-header">
+        <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+        <h1>✏️ Edit Folder</h1>
+    </header>
+
+    <section class="task-card">
+        <form action="{{ url_for('edit_task', task_id=task.id) }}" method="POST" enctype="multipart/form-data" class="edit-form">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" value="{{ task.title }}" required class="input-field">
+
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" class="textarea-field textarea-large">{{ task.notes }}</textarea>
+
+            <label for="due_date">Due Date</label>
+            <input type="date" id="due_date" name="due_date" value="{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '' }}" class="input-field">
+
+            {% if task.filename %}
+                <p>Current file: <a href="{{ task.filename }}" target="_blank">📎 View current file</a></p>
+            {% endif %}
+
+            <label for="file">Replace File (optional)</label>
+            <input type="file" name="file" id="file" class="file-btn">
+
+            <div class="form-bottom">
+                <a href="{{ url_for('dashboard') }}" class="btn delete-btn">Cancel</a>
+                <button type="submit" class="btn save-btn">Save Changes</button>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

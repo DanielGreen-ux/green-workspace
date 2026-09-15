@@ -427,3 +427,20 @@ button:disabled {
     font-size: var(--fs-xs);
     margin-left: 0.5rem;
 }
+.textarea-large {
+    min-height: 400px;
+    resize: vertical;
+    font-family: inherit;
+}
+.back-link {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    color: white;
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    opacity: 0.85;
+}
+.back-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}

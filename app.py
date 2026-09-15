@@ -374,12 +374,16 @@ def add_task():
 
 @app.route('/edit_task/<int:task_id>', methods=['POST'])
 @app.route('/edit_task/<int:task_id>', methods=['POST'])
+@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
         
     task = Task.query.get_or_404(task_id)
-    if task.user_id == session['user_id']:
+    if task.user_id != session['user_id']:
+        return redirect(url_for('dashboard'))
+    
+    if request.method == 'POST':
         task.title = request.form.get('title')
         task.notes = request.form.get('notes')
         due_date_str = request.form.get('due_date')
@@ -389,12 +393,14 @@ def edit_task(task_id):
         if file and file.filename != '':
             if not allowed_file(file.filename):
                 flash('File type not allowed. Please upload an image, PDF, or document.', 'error')
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('edit_task', task_id=task.id))
             result = cloudinary.uploader.upload(file)
             task.filename = result['secure_url']
         db.session.commit()
         flash('Task updated successfully!', 'success')
-    return redirect(url_for('dashboard'))
+        return redirect(url_for('dashboard'))
+    
+    return render_template('edit_task.html', task=task)
 
 @app.route('/toggle/<int:task_id>')
 def toggle_task(task_id):

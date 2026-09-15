@@ -73,7 +73,8 @@
     {% endif %}
 </div>
 
-<div class="action-bar">
+<<div class="action-bar">
+    <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn save-btn">✏️ Edit</a>
     <a href="{{ url_for('toggle_task', task_id=task.id) }}" class="btn action-btn">
         {% if task.status == 'Completed' %}Mark Pending{% else %}Mark Complete{% endif %}
     </a>
